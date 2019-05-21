@@ -32,8 +32,6 @@ void setup()
 {
   size(1600,1000);
   
-  colorMode(HSB, 255);
-  
   isDebugModeOn = true;
   movingFlowField = true;
   
@@ -49,7 +47,7 @@ void setup()
 
 void draw()
 {
-   background(0, 0, 0);
+   background(0);
    
    if (movingFlowField)
    {
