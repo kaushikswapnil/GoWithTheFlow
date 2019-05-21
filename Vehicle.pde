@@ -16,7 +16,7 @@ class Vehicle
  float m_WB_CircleRadius;
  float m_MaxWanderForce;
  
- PVector m_Color;
+ float m_Color;
  
  Vehicle()
  {
@@ -32,7 +32,7 @@ class Vehicle
    m_WB_CircleCenterDistance = 20.0f;
    m_WB_CircleRadius = 10.0f;
    
-   m_Color = new PVector(random(0,255), random(0,255), random(0,255));
+   SetColorValueBasedOnPVector(PVector.random2D());
  }
  
  Vehicle(PVector position, PVector velocity, PVector acceleration, PVector dimensions, float maxSpeed, float maxSteerForce, float mass, float slowdownDistance, float wanderCircleCenterDistance, float wanderCircleRadius)
@@ -48,14 +48,12 @@ class Vehicle
    m_WB_CircleCenterDistance = wanderCircleCenterDistance;
    m_WB_CircleRadius = wanderCircleRadius;
    
-   m_Color = new PVector(random(0,255), random(0,255), random(0,255));
+   SetColorValueBasedOnPVector(PVector.random2D());
  }
  
- void Seek(PVector targetPosition)
+ void FollowFlow(FlowField flowField)
  {
-   PVector displacementToTarget = PVector.sub(targetPosition, m_Position);
-   PVector desiredVelocity = displacementToTarget.copy();
-   desiredVelocity.normalize();
+   PVector desiredVelocity = flowField.GetFlowDirectionAt(m_Position);
 
    desiredVelocity.mult(m_MaxSpeed);
    
@@ -66,38 +64,6 @@ class Vehicle
    ApplyForce(steeringForce);
  }
  
- void Wander()
- {
-     PVector circleCenterVector = m_Velocity.copy();
-     circleCenterVector.normalize();
-     circleCenterVector.mult(m_WB_CircleCenterDistance);
-     
-     PVector relativeDisplacementForWanderPoint = new PVector(1.0f, 0.0f);
-     float randomRotationAngle = map(random(0, 1), 0.0f, 1.0f, 0.0f, 2 * PI);
-     relativeDisplacementForWanderPoint.rotate(randomRotationAngle);
-     relativeDisplacementForWanderPoint.mult(m_WB_CircleRadius);
-     
-     PVector displacementForWanderPoint = PVector.add(relativeDisplacementForWanderPoint, m_Position);
-     
-     Seek(displacementForWanderPoint);
- }
- 
- void FollowFlow(FlowField flowField)
- {
-   PVector desiredVelocity = GetFlowDirectionAt(m_Position, flowField);
-   
-   if (movingFlowField && isDebugModeOn)
-   {
-      //stroke(255);
-      //line(m_Position.x, m_Position.y, m_Position.x + (5 * desiredVelocity.x), m_Position.y + (5 * desiredVelocity.y));
-   }
-   desiredVelocity.mult(m_MaxSpeed);
-   
-   PVector desiredLocation = PVector.add(desiredVelocity, m_Position);
-   
-   Seek(desiredLocation);
- }
- 
  void ApplyForce(PVector force)
  {
    PVector resultantAcceleration = PVector.div(force, m_Mass);
@@ -106,20 +72,25 @@ class Vehicle
  
  void Update()
  {
-   IterateColorBasedOnAcceleration();
+   SetColorValueBasedOnAcceleration();
    PhysicsUpdate();
    WrapAroundWalls();
  }
  
- void IterateColorBasedOnAcceleration()
+ void SetColorValueBasedOnAcceleration()
  {
-   m_Color = m_Acceleration.copy();
+   SetColorValueBasedOnPVector(m_Acceleration);
+ }
+ 
+ void SetColorValueBasedOnPVector(PVector force)
+ {
+   m_Color = map(force.heading(), 0, TWO_PI, 0, 360);
  }
  
  void Display()
  {  
     strokeWeight(4);
-    stroke(map(m_Color.heading(), 0, TWO_PI, 0, 360), 255, 255, 200);
+    stroke(m_Color, 255, 255, 200);
     line(m_PrevPos.x, m_PrevPos.y, m_Position.x, m_Position.y);
     //point(m_Position.x, m_Position.y);
     //fill();
@@ -137,7 +108,7 @@ class Vehicle
  
  void PhysicsUpdate()
  {
-   m_PrevPos = m_Position.copy();
+   m_PrevPos = m_Position.get();
    m_Velocity.add(m_Acceleration);
    m_Position.add(m_Velocity);
    

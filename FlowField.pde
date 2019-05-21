@@ -53,18 +53,10 @@ class FlowField
    
    PVector GetFlowDirectionAt(PVector position)
    {
-      return GetFlowDirectionAt(position.x, position.y); 
+      return GetFlowDirectionAt(position.x/1000, position.y/1000, position.z, xFlowMove, yFlowMove, zFlowMove); 
    }
    
-   PVector GetFlowDirectionAt(float x, float y)
-   {
-      int col = constrain((int)(x/m_Resolution), 0 , m_Columns - 1); 
-      int row = constrain((int)(y/m_Resolution), 0 , m_Rows - 1);
-      
-      return m_Field[col][row].copy();
-   }
-   
-   PVector GetFlowDirectionAt(float x, float y, float xMove, float sliceZ, float yMove, float zMove)
+   PVector GetFlowDirectionAt(float x, float y, float sliceZ, float xMove, float yMove, float zMove)
    {
       float theta = map(noise(x + xMove, y + yMove, sliceZ + zMove), 0.0, 1.0, 0, TWO_PI);
       PVector flow = new PVector(cos(theta), sin(theta));

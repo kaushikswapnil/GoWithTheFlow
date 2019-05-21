@@ -44,9 +44,7 @@ void setup()
  
   explosionGenerator = new ExplosionGenerator();
   
-  CreateVehiclesArray();
-  
-  
+  CreateVehiclesArray();  
 }
 
 void draw()
@@ -61,10 +59,7 @@ void draw()
      xFlowMove += xFlowSpeed * timePassed;
      yFlowMove += yFlowSpeed * timePassed;
      zFlowMove += zFlowSpeed * timePassed;
-   }
-   
-   //if (isDebugModeOn)
-     //DrawFlowField();   
+   }  
    
    PVector mousePos = new PVector(mouseX, mouseY);
    float explosionMagnitude = explosionGenerator.TryExplode();
@@ -125,43 +120,6 @@ void draw()
   }
   
 }
-
-PVector GetFlowDirectionAt(PVector position, FlowField flow)
- {  
-  return GetFlowDirectionAt(position.x/1000, position.y/1000, position.z, flow);
- }
- 
-PVector GetFlowDirectionAt(float posX, float posY, float sliceZ, FlowField flow)
- {  
-  if (movingFlowField)
-   {
-      return flow.GetFlowDirectionAt(posX, posY, sliceZ, xFlowMove, yFlowMove, zFlowMove);
-   }
-   
-   return flowField.GetFlowDirectionAt(posX, posY);
- }
- 
- void DrawFlowField()
- {
-    for ( int x = 0; x < width; x = x + flowFieldResolution)
-    {
-      for (int y = 0; y < height; y = y + flowFieldResolution)
-      {
-        pushMatrix();
-        translate(x, y);
-        stroke(255, 200);
-        //fill(255);
-        PVector flowVector = GetFlowDirectionAt(x, y, 0.0f,flowField);
-        rotate(flowVector.heading());
-        line(0, 0, flowVector.mag() * (flowFieldResolution -2), 0);
-        //ellipse(x, y, 10, 10);
-        //text("Hi there", x, y);
-        popMatrix();
-      }      
-    }
-    
-    //ellipse(width/2, height/2, 10, 10);
- }
 
 void mousePressed()
 {
