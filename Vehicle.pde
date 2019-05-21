@@ -90,7 +90,7 @@ class Vehicle
  void Display()
  {  
     strokeWeight(4);
-    stroke(m_Color, 255, 255, 200);
+    stroke(m_Color);//, 255, 255, 200);
     line(m_PrevPos.x, m_PrevPos.y, m_Position.x, m_Position.y);
     //point(m_Position.x, m_Position.y);
     //fill();
