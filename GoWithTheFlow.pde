@@ -109,7 +109,7 @@ void draw()
         
         explosionDirection.normalize();
         
-        explosionForce = explosionDirection.copy();
+        explosionForce = explosionDirection.get();
         explosionForce.mult(explosionMagnitude);
         vehicles[i].ApplyForce(explosionForce);
     }
