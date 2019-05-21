@@ -49,7 +49,7 @@ void setup()
 
 void draw()
 {
-   background(0, 0, 0, clearanceRate);
+   background(0, 0, 0);
    
    if (movingFlowField)
    {
