@@ -30,7 +30,7 @@ float zSliceDistance = 0.005f;
 
 void setup() 
 {
-  size(1600,1200);
+  size(1600,1000);
   
   colorMode(HSB, 255);
   
