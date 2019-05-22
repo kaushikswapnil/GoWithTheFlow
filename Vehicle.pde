@@ -16,7 +16,7 @@ class Vehicle
  float m_WB_CircleRadius;
  float m_MaxWanderForce;
  
- float m_Color;
+ float m_Hue;
  
  Vehicle()
  {
@@ -32,7 +32,7 @@ class Vehicle
    m_WB_CircleCenterDistance = 20.0f;
    m_WB_CircleRadius = 10.0f;
    
-   SetColorValueBasedOnPVector(PVector.random2D());
+   SetHueValueBasedOnPVector(PVector.random2D());
  }
  
  Vehicle(PVector position, PVector velocity, PVector acceleration, PVector dimensions, float maxSpeed, float maxSteerForce, float mass, float slowdownDistance, float wanderCircleCenterDistance, float wanderCircleRadius)
@@ -48,7 +48,7 @@ class Vehicle
    m_WB_CircleCenterDistance = wanderCircleCenterDistance;
    m_WB_CircleRadius = wanderCircleRadius;
    
-   SetColorValueBasedOnPVector(PVector.random2D());
+   SetHueValueBasedOnPVector(PVector.random2D());
  }
  
  void FollowFlow(FlowField flowField)
@@ -72,24 +72,25 @@ class Vehicle
  
  void Update()
  {
-   SetColorValueBasedOnAcceleration();
+   SetHueValueBasedOnAcceleration();
    PhysicsUpdate();
    WrapAroundWalls();
  }
  
- void SetColorValueBasedOnAcceleration()
+ void SetHueValueBasedOnAcceleration()
  {
-   SetColorValueBasedOnPVector(m_Acceleration);
+   SetHueValueBasedOnPVector(m_Acceleration);
  }
  
- void SetColorValueBasedOnPVector(PVector force)
+ void SetHueValueBasedOnPVector(PVector force)
  {
-   m_Color = map(force.heading(), 0, TWO_PI, 0, 360);
+   m_Hue = map(force.heading(), 0, TWO_PI, 0, 1);
  }
  
  void Display()
  {  
-    stroke(m_Color, 255, 255);
+    strokeWeight(3);
+    stroke(HSBtoRGB(m_Hue, 1, 1));
     line(m_PrevPos.x, m_PrevPos.y, m_Position.x, m_Position.y);
     //point(m_Position.x, m_Position.y);
     //fill();
